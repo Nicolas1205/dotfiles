@@ -1,0 +1,17 @@
+#+title: README
+#+subtitle: Documentation
+#+author: Anachuri Nicolas Daniel
+#+date: <2022-09-04 Sun>
+
+
+* TODO Make it Easier :noexport:
+DEADLINE: <2022-10-04 Sun>
+- Maybe use nix?
+- [ ] Add scripts for dependencies
+* Applications
+- Rofi
+- Zathura
+- Dusnt
+- Emacs
+- Neovim
+- Pywall
