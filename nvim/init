@@ -1,0 +1,57 @@
+-- Locals
+local g = vim.g
+local cmd = vim.cmd
+local o , wo  , bo  = vim.o , vim.wo , vim.bo
+local utils = require'config.utils'
+local opt =  utils.opt
+local map = utils.map
+
+-- Settings
+
+g.mapleader = [[ ]]
+
+local buffer = {o , bo} 
+local window = {o , wo}
+
+opt('textwidth', 100, buffer)
+opt('smartcase',  true)
+opt('expandtab', true)
+opt('tabstop' , 2 , buffer)
+opt('shiftwidth', 2, buffer)
+opt('number', true, window)
+opt('relativenumber', true, window)
+opt('showmode', false)
+
+map('n', '<leader>fs', '<cmd>w<cr>', { silent = true })
+map('n', '<leader>qq', '<cmd>wq<cr>', { silent = true })
+map('n' , '<leader>wd' , '<cmd>close<cr>', {silent = true})
+
+map('n' , '<leader>wL' , '<cmd>vsplit<cr>' , {silent = true})
+map('n' , '<leader>wJ' , '<cmd>split<cr>' , {silent = true})
+
+map('n', '<leader>wh', '<c-w>h')
+map('n', '<leader>wj', '<c-w>j')
+map('n', '<leader>wk>', '<c-w>k')
+map('n', '<leader>wl', '<c-w>l')
+  
+map('n', '<leader>le', '<cmd>Trouble<cr>' , {silent = true})
+
+opt('termguicolors', true)
+--opt('background', 'dark')
+cmd [[colorscheme catppuccin]]
+
+-- CMD 
+cmd [[command! WhatHighlight :call util#syntax_stack()]]
+cmd [[command! PackerInstall packadd packer.nvim | lua require('plugins').install()]]
+cmd [[command! PackerUpdate packadd packer.nvim | lua require('plugins').update()]]
+cmd [[command! PackerSync packadd packer.nvim | lua require('plugins').sync()]]
+cmd [[command! PackerClean packadd packer.nvim | lua require('plugins').clean()]]
+cmd [[command! PackerCompile packadd packer.nvim | lua require('plugins').compile()]]
+--cmd [[set hidden]]
+--cmd [[set confirm]] 
+cmd [[set clipboard+=unnamedplus]]
+
+-- Requirements
+
+require('plugins')
+require('wlsample.vscode')
