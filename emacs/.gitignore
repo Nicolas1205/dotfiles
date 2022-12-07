@@ -1,0 +1,13 @@
+/auto-save-list/
+/elpa/
+/eshell/
+/transient/
+
+/recentf
+/.lsp-session-v1
+/lisp/*.elc
+/projects
+/projectile-bookmarks.eld
+/.org-id-locations
+/games/
+/timelog
