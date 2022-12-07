@@ -1,5 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =3
-let g:netrw_dirhist_3='/home/nicolas/AnkiVim/script'
-let g:netrw_dirhist_2='/home/nicolas/gitclones/xmonad-dbus/src/XMonad'
-let g:netrw_dirhist_1='/home/nicolas/.config/fish'

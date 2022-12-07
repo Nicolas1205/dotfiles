@@ -1,13 +1,16 @@
-local opt = vim.opt 
-local g = vim.g 
+local opt = vim.opt
+local g = vim.g
 
-opt.confirm = true
-opt.title = true
-opt.clipboard = "unnamedplus"
+opt.confirm = true 
+opt.title   = true 
+opt.clipboard = "unnamedplus" 
 opt.laststatus = 3
 opt.completeopt = "menuone,noinsert,noselect"
+vim.o.ls=0 
+opt.cmdheight=0
 
--- Indentline
+
+-- Indentation
 
 opt.updatetime = 500
 opt.expandtab = true
@@ -52,12 +55,8 @@ local default_plugins = {
    "zipPlugin",
 }
 
+vim.cmd [[set termguicolors]]
+
 for _, plugin in pairs(default_plugins) do 
 	g["loaded_" .. plugin] = 1
 end
-
-vim.g.catppuccin_flavour = "mocha"
-vim.cmd [[set termguicolors]]
-vim.cmd [[colorscheme catppuccin]]       
-
-

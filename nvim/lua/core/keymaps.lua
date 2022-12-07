@@ -26,6 +26,7 @@ map(
   "normal_move_line_down",
   "Normal Move line down"
 )
+
 map(
 
   "n",
@@ -87,56 +88,29 @@ map("n", "<leader>wq", "<C-W>c")
 map("n", "<leader>wJ", "<C-W>s", opts, "Window", "split_below", "Split window below")
 map("n", "<leader>wL", "<C-W>v", opts, "Window", "split_right", "Split window right")
 
+-- === FZF ==
 
--- === TELESCOPE === --
-
-
-
+map(
+  "n",
+  "<leader>.",
+  "<cmd>lua require('fzf-lua').files()<CR>",
+  opts
+)
 map(
   "n",
   "<leader>,",
-  "<cmd>Telescope buffers show_all_buffers=true<CR>",
-  opts,
-  "Movement",
-  "switch_buffers",
-  "Switch buffers"
+  "<cmd>lua require('fzf-lua').buffers()<CR>",
+  opts
 )
-
 map(
   "n",
   "<leader>:",
-  "<cmd>Telescope commands<CR>",
-  opts,
-  "Editor",
-  "command_history",
-  "Command history"
+  "<cmd>lua require('fzf-lua').buffers()<CR>",
+  opts
 )
-
-map(
-  "n",
-  "<leader>ff",
-  "<cmd>Telescope find_files<CR>",
-  opts,
-  "Editor",
-  "find_files_alt",
-  "Find files"
-)
-
 map(
   "n",
   "<leader>fr",
-  "<cmd>Telescope oldfiles<CR>",
-  opts,
-  "Editor",
-  "recent_files",
-  "Recently opened files"
+  "<cmd>lua require('fzf-lua').old_files()<CR>",
+  opts
 )
-
-
-map(
-  "n", 
-  "<leader>.", 
-  ":Telescope file_browser<CR>", 
-  {noremap = true}
-)
-
