@@ -1,20 +1,19 @@
 import XMonad
-import System.Directory
-import System.IO (hPutStrLn)
-import System.Exit (exitSuccess)
+
 import qualified XMonad.StackSet as W
-import XMonad.Hooks.EwmhDesktops
-
 import XMonad.Util.SpawnOnce
-
 import XMonad.Util.EZConfig (additionalKeysP)
-
---import qualified DBus as D
---import qualified DBus.Client as D
-import qualified Codec.Binary.UTF8.String as UTF8
-
-myFont :: String
-myFont = "xft:FiraCode Nerd Font Mono:regular:size=9:antialias=true:hinting=true"
+import XMonad.Util.Themes
+import XMonad.Util.NamedScratchpad
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.WindowSwallowing
+import XMonad.Layout
+import XMonad.Layout.Tabbed
+import XMonad.Prompt
+import XMonad.Prompt.OrgMode (orgPrompt)
+import XMonad.Prompt.Pass
 
 myModMask :: KeyMask
 myModMask = mod4Mask        -- Sets modkey to super/windows key
@@ -22,56 +21,51 @@ myModMask = mod4Mask        -- Sets modkey to super/windows key
 myTerminal :: String
 myTerminal = "kitty"    -- Sets default terminal
 
-myBrowser :: String
-myBrowser = "firefox"  -- Sets qutebrowser as browser
-
-myEmacs :: String
-myEmacs = "emacs"  -- Makes emacs keybindings easier to type
-
-myEditor :: String
-myEditor = "emacs"  -- Sets emacs as editor
-
--- myEditor = myTerminal ++ " -e vim "    -- Sets vim as editor
-
-myBorderWidth :: Dimension
-myBorderWidth = 0           -- Sets border width for windows
-
-myNormColor :: String
-myNormColor   = "#282c34"   -- Border color of normal windows
-
-myFocusColor :: String
-myFocusColor  = "#46d9ff"   -- Border color of focused windows
-
-windowCount :: X (Maybe String)
-windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
-
-
-myWorkspaces = [" dev ", " www ", " sys ", " doc ", " vbox ", " chat ", " mus ", " vid ", " gfx "]
+myWorkspaces = [" dev ", " www ", " mus ", " doc " ]
 
 mySpawnHook :: X ()
 mySpawnHook = do
-  spawnOnce "wal -i ~/Images/gorgeus.jpg"
-  spawnOnce "kitty"
+  spawnOnce "wal -i ~/wallpapers/gorgeus.jpg"
+  spawnOnce "bash ~/me/dotfiles/polybar/material/launch.sh"
 
 myKeys :: [(String , X () )]
 myKeys =
   [
-     ("<XF86AudioPlay>", spawn (myTerminal ++ "mocp --play"))
-     , ("<XF86AudioPrev>", spawn (myTerminal ++ "mocp --previous"))
-     , ("<XF86AudioNext>", spawn (myTerminal ++ "mocp --next"))
-     , ("<S-t>", spawn "amixer set Master toggle")
+
+       ("<XF86AudioPlay>", spawn ("mocp --play"))
+     , ("<XF86AudioPrev>", spawn ("mocp --previous"))
+     , ("<XF86AudioNext>", spawn ("mocp --next"))
+     , ("<XF86AudioMute>", spawn "amixer set Master toggle")
      , ("<XF86AudioLowerVolume>", spawn "amixer set Master 5%- unmute")
      , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 5%+ unmute")
+     , ("M-f", sendMessage ToggleStruts)
+     , ("M-C-o", orgPrompt def "TODO" "~/todos.org")
+     , ("M-C-p", passPrompt def)
+     , ("M-C-l", spawn "xset dpms force off")
+     , ("M-S-m", namedScratchpadAction scratchpads "spotify")
+     , ("M-S-t", namedScratchpadAction scratchpads "term")
   ]
 
-
+scratchpads = [
+   NS "spotify" "spotify" (className =? "Spotify") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+ , NS "term" "kitty --name term" (resource =? "term") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+              ]
 main :: IO ()
-main =	xmonad $ ewmh def
+main = xmonad $ ewmh $ docks def
           {
-          modMask            	 = myModMask
-          , terminal           = myTerminal
-          , workspaces         = myWorkspaces
-          , focusedBorderColor = myFocusColor
-          , startupHook        = mySpawnHook
-	  			, borderWidth		     = 0
+            modMask         = myModMask
+          , terminal        = myTerminal
+          , workspaces      = myWorkspaces
+          , startupHook     = mySpawnHook
+          , borderWidth     = 0
+          , layoutHook      = myLayout
+          , handleEventHook = swallowEventHook (className =? "mpv" <||> className =? "feh") (return True)
+          , manageHook      = namedScratchpadManageHook scratchpads
           } `additionalKeysP` myKeys
+
+myLayout = avoidStruts $ tabbedBottom shrinkText myTabTheme ||| Full
+
+myTabTheme = def {
+                      activeColor  = "#ebcbba"
+                    , inactiveColor = "#9B6764"
+                  }
